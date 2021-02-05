@@ -3,6 +3,7 @@ const background = document.querySelector('.background');
 
 let isJumping = false;
 let position = 0;
+let gameOver = false;
 
 function handleKeyUp(event){
 	//case space bar pressed
@@ -46,41 +47,61 @@ function jump(){
 }
 
 function createCactus(){
-	const cactus = document.createElement('div');
-	let cactusPosition = 1000;
+	if(!gameOver){
+		const cactus = document.createElement('div');
+		let cactusPosition = 1000;
 
-	//choose a random time to spawn a new cactus
-	let randomTime = Math.random() * 6000;
 
-	cactus.classList.add('cactus');
-	cactus.style.left = 1000 + 'px';
-	background.appendChild(cactus);
+		//choose a random time to spawn a new cactus
+		let randomTime = Math.random() * 6000;
 
-	//control cactus movement
-	let leftInterval = setInterval(() => {
+		cactus.classList.add('cactus');
+		cactus.style.left = 1000 + 'px';
+		background.appendChild(cactus);
 
-		//if cactus is out of screen delete him
-		if(cactusPosition < -60){
-			clearInterval(leftInterval);
-			background.removeChild(cactus);
-		}
-		//colision case
-		else if (cactusPosition > 0 && cactusPosition < 60 && position < 60){
-			//game over
-			clearInterval(leftInterval);
-			document.body.innerHTML = '<h1 class="game-over"> FIM DE JOGO </h1>';
+		//control cactus movement
+		let leftInterval = setInterval(() => {
 
-		}
-		//else keep moving him
-		else{
-			cactusPosition -= 10;
-			cactus.style.left = cactusPosition + 'px';			
-		}
+			//if cactus is out of screen delete him
+			if(cactusPosition < -60){
+				clearInterval(leftInterval);
+				background.removeChild(cactus);
+			}
+			//colision case
+			else if (cactusPosition > 0 && cactusPosition < 60 && position < 60){
+				//game over
+				clearInterval(leftInterval);
+				gameOver= true;
+				// document.body.innerHTML = '<h1 class="game-over"> FIM DE JOGO </h1>';
 
-	}, 20);
+			}
+			//else keep moving him
+			else{
+				cactusPosition -= 10;
+				cactus.style.left = cactusPosition + 'px';			
+			}
 
-	//generate a new cactus
-	setTimeout(createCactus, randomTime);
+		}, 20);
+
+		//generate a new cactus
+		setTimeout(createCactus, randomTime);
+	}
+
+	else{
+		//stops the background animation
+		background.classList.remove('background');
+		background.classList.add('noAnimation');
+
+		//adds a restart button
+		const restartButton = document.createElement('BUTTON');
+		restartButton.classList.add('restartButton');
+		background.appendChild(restartButton);
+
+		//changes the dino sprite
+		dino.classList.remove('dino');
+		dino.classList.add('dead-dino');
+
+	}
 }
 
 createCactus();
