@@ -1,2 +1,2 @@
-# DinoGame
-Implementing the out of internet dinossaur game
+# DinoGame :crocodile:
+Implementing the out of internet dinosaur game
